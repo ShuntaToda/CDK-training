@@ -4,6 +4,7 @@ import * as ec2 from "aws-cdk-lib/aws-ec2";
 import { Vpc } from "./resource/vpc";
 import { Subnet } from "./resource/subnet";
 import { InternetGateway } from "./resource/internetGateway";
+import { RouteTable } from "./resource/routeTable";
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class CdkStack extends cdk.Stack {
@@ -28,6 +29,17 @@ export class CdkStack extends cdk.Stack {
     // Internet Gateway
     const internetGateway = new InternetGateway(vpc.vpc);
     internetGateway.createResources(this);
+
+    const routeTable = new RouteTable(
+      vpc.vpc,
+      subnet.public1a,
+      subnet.public1c,
+      subnet.private1a,
+      subnet.private1c,
+      internetGateway.igw
+    );
+    routeTable.createResources(this);
+
     // The code that defines your stack goes here
 
     // example resource
